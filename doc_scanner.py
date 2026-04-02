@@ -57,6 +57,23 @@ def perspective_scan(original_image, contour, ratio):
 	return warped
 
 
+def scan_document_image(image):
+	if image is None:
+		raise ValueError("No image data provided")
+
+	ratio = image.shape[0] / 500.0
+	original = image.copy()
+	resized = imutils.resize(image, height=500)
+	edged = preprocess_for_edges(resized)
+	document_contour = find_document_contour(edged)
+
+	if document_contour is None:
+		raise ValueError("Could not find a 4-point document contour in the image")
+
+	scanned = perspective_scan(original, document_contour, ratio)
+	return original, scanned, edged, document_contour
+
+
 def show_outline(image, contour):
 	outlined = image.copy()
 	cv2.drawContours(outlined, [contour], -1, (0, 255, 0), 2)

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doc Scanner</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Space+Grotesk:wght@400;500;700&display=swap"
+        rel="stylesheet"
+    />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <div class="bg-shape shape-1"></div>
+    <div class="bg-shape shape-2"></div>
+
+    <main class="page-wrap">
+        <section class="hero card reveal">
+            <p class="eyebrow">Computer Vision Tool</p>
+            <h1>Document Scanner</h1>
+            <p class="subtitle">
+                Upload a document photo and get a clean, scanned-style output instantly.
+            </p>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    <ul class="alerts" role="alert">
+                        {% for message in messages %}
+                            <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            {% endwith %}
+
+            <form method="POST" enctype="multipart/form-data" class="upload-form">
+                <label class="file-input-wrap">
+                    <span>Select image</span>
+                    <input
+                        type="file"
+                        name="document"
+                        accept=".png,.jpg,.jpeg,.bmp,.tif,.tiff,.webp"
+                        required
+                    />
+                </label>
+                <button type="submit">Scan Document</button>
+            </form>
+        </section>
+
+        {% if original_image and scanned_image %}
+            <section class="results reveal">
+                <article class="image-card card">
+                    <h2>Original</h2>
+                    <img src="data:image/png;base64,{{ original_image }}" alt="Original upload" />
+                </article>
+                <article class="image-card card">
+                    <h2>Scanned Result</h2>
+                    <img src="data:image/png;base64,{{ scanned_image }}" alt="Scanned output" />
+                </article>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>
